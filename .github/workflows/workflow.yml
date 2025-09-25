@@ -1,25 +1,31 @@
-name: {name of workflow}
+name: CI workflow
 
 on:
   push:
-    branches: {array of branches}
+    branches: [ "main" ]
   pull_request:
-    branches: {array of branches}
+    branches: [ "main" ]
 
 jobs:
   build:
-    runs-on: {placeholder}
-    container: {placeholder}
+    runs-on: ubuntu-latest
+    container: python:3.9-slim
+
     steps:
-      - name: {placeholder}
-        uses: {placeholder}
-      - name: {placeholder}
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
         run: |
-        {first command}
-        {second command}
-      - name: {placeholder}
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Lint with flake8
         run: |
-        {first command}
-        {second command}
-         - name: Run unit tests with nose
-           run: {insert command here}
+          pip install flake8
+          flake8 .
+
+      - name: Run unit tests with nose
+        run: |
+          pip install nose
+          nosetests
